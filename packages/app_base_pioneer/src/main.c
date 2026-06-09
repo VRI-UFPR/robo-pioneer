@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
 
     pioneer_connect("/dev/ttyUSB0", 0);
     pioneer_disable_sonars();
-    // pioneer_enable_motors();
+    // -- pioneer_enable_motors();
 
     // Main loop
     int count = 0;   
@@ -60,16 +60,16 @@ int main(int argc, char *argv[]) {
     float vel=0, rotvel=0;
     while( ufr_loop_ok() ) {
 
-        if ( ufr_recv_async(&vel_cmd) == UFR_OK ) {
+        if ( ufr_recv_async(&vel_cmd) ) {
             ufr_get(&vel_cmd, "%f %f", &vel, &rotvel);
             i16_vel = (int16_t) (vel * 100.0);
             i16_rotvel = (int16_t) rotvel;
             printf("%f %f\n", vel, rotvel);
 
-            if ( i16_vel > 100 ) {
-                i16_vel = 100;
-            } else if ( i16_vel < -100 ) {
-                i16_vel = -100;
+            if ( i16_vel > 150 ) {
+                i16_vel = 150;
+            } else if ( i16_vel < -150 ) {
+                i16_vel = -150;
             }
 
             if ( i16_rotvel > 10 ) {
@@ -80,19 +80,17 @@ int main(int argc, char *argv[]) {
 
             pioneer_vel( i16_vel );
             pioneer_rotvel( i16_rotvel );
-            printf("[LOG]: %d %d\n", i16_vel, i16_rotvel);
+	        printf("[LOG]: %d %d\n", i16_vel, i16_rotvel);
             count = 0;
         }
 
         if ( ufr_recv_async(&timer) == UFR_OK ) {
             if ( count >= 3 ) {
-                // vel = 0;
-                // rotvel = 0;
                 pioneer_vel(i16_vel);
                 pioneer_rotvel(i16_rotvel);
                 printf("[LOG]: %d %d\n", i16_vel, i16_rotvel);
                 count = 0;
-                // printf("[LOG]: Timeout\n");
+                printf("[LOG]: Timeout\n");
             }
             count += 1;
         }
