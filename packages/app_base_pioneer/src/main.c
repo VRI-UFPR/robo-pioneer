@@ -64,6 +64,20 @@ int main(int argc, char *argv[]) {
             ufr_get(&vel_cmd, "%f %f", &vel, &rotvel);
             i16_vel = (int16_t) (vel * 100.0);
             i16_rotvel = (int16_t) rotvel;
+            printf("%f %f\n", vel, rotvel);
+
+            if ( i16_vel > 100 ) {
+                i16_vel = 100;
+            } else if ( i16_vel < -100 ) {
+                i16_vel = -100;
+            }
+
+            if ( i16_rotvel > 10 ) {
+                i16_rotvel = 10;
+            } else if ( i16_rotvel < -10 ) {
+                i16_rotvel = -10;
+            }
+
             pioneer_vel( i16_vel );
             pioneer_rotvel( i16_rotvel );
             printf("[LOG]: %d %d\n", i16_vel, i16_rotvel);
