@@ -1,0 +1,16 @@
+[Unit]
+Description=VRI Pioneer
+
+[Service]
+ExecStart=/home/vri/boot/vri-pioneer-start.sh
+User=vri
+Group=vri
+# KillMode=process
+# Restart=on-failure
+Restart=always
+RestartSec=30s
+# RestartPreventExitStatus=255
+# Type=notify
+
+[Install]
+WantedBy=multi-user.target
