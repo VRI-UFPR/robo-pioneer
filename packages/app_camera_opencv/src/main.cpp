@@ -50,18 +50,33 @@ using namespace cv;
 // ============================================================================
 
 int main() {
+    // Initialize the variables
+    uint8_t count = 0;
+    std::vector<uint8_t> buffer;
+
+    // Open the link
     link_t video = ufr_publisher(ROBOT_TOPIC_CAMERA_RGB);
     ufr_exit_if_error(&video);
 
+    // Initialize the camera
     cv::VideoCapture cap(0);
-    std::vector<uint8_t> buffer;
+
+    // Main loop
     while( ufr_loop_ok() ) {
+        // Read the frame from the camera
         Mat frame;
         cap.read(frame);
-        imencode(".jpg", frame, buffer);
 
-        ufr_put(&video, "sii", ".jpg", frame.cols, frame.rows);
-        ufr_put_raw(&video, &buffer[0], buffer.size());
+        // Decrease the FPS
+        if ( count < 6 ) {
+            count += 1;
+            continue;
+        }
+        count = 0;
+
+        // Send the frame
+        imencode(".jpg", frame, buffer);
+        ufr_put_file(&video, "image/jpeg", (const char*) &buffer[0], buffer.size());
         ufr_send(&video);
     }
 
