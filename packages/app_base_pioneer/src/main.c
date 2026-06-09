@@ -46,8 +46,8 @@
 
 int main(int argc, char *argv[]) {
     link_t timer = ufr_subscriber("@new timer @time 200ms");
-    link_t vel_cmd = ufr_subscriber("@new mqtt @coder msgpack @host 177.153.62.174 @topic /cmd_vel");
-    link_t odom = ufr_publisher("@new mqtt @coder msgpack  @host 177.153.62.174 @topic /odom");
+    link_t vel_cmd = ufr_subscriber(ROBOT_TOPIC_CMD_VEL);
+    link_t odom = ufr_publisher(ROBOT_TOPIC_ODOM);
 
     pioneer_connect("/dev/ttyUSB0", 0);
     pioneer_disable_sonars();

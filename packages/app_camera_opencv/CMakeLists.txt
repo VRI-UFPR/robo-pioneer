@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(camera_opencv)
 
+
 find_package(OpenCV)
 
 # Example 1: simple
