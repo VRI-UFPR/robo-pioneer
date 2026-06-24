@@ -65,7 +65,7 @@ int main() {
     printf("Press keys (Press 'q' to quit)...\n");
 
     // Inicializa a comunicação com o roomba
-    link_t cmdvel = ufr_publisher(ROBOT_TOPIC_CMD_VEL);
+    link_t* cmdvel = ufr_publisher_env("UFR_CMDVEL");
 
     // Loop principal
     while ( ufr_loop() ) {
@@ -81,20 +81,20 @@ int main() {
 
                 // Caso apertado w, s, a, d, altera a velocidade do roomba 
                 if ( c == 'w' ) {
-                    ufr_put(&cmdvel, "%f %f\n", 1.0, 0.0);
+                    ufr_put(cmdvel, "%f %f\n", 1.0, 0.0);
 
                 } else if ( c == 's' ) {
-                    ufr_put(&cmdvel, "%f %f\n", -1.0, 0.0);
+                    ufr_put(cmdvel, "%f %f\n", -1.0, 0.0);
 
                 } else if ( c == 'a' ) {
-                    ufr_put(&cmdvel, "%f %f\n", 0.0, 10.0);
+                    ufr_put(cmdvel, "%f %f\n", 0.0, 10.0);
 
                 } else if ( c == 'd' ) {
-                    ufr_put(&cmdvel, "%f %f\n", 0.0, -10.0);
+                    ufr_put(cmdvel, "%f %f\n", 0.0, -10.0);
 
                 // Caso apertado espaço, pára o roomba
                 } else if ( c == ' ' ) {
-                    ufr_put(&cmdvel, "%f %f\n", 0.0, 0.0);
+                    ufr_put(cmdvel, "%f %f\n", 0.0, 0.0);
 
                 // Nenhum dos casos acimas, simplesmente mostra a tecla
                 } else {
@@ -106,7 +106,7 @@ int main() {
     }
 
     // Pára o movimento e fecha a comunicação com o roomba
-    ufr_put(&cmdvel, "%f %f\n", 0.0, 0.0);
-    ufr_close(&cmdvel);
+    ufr_put(cmdvel, "%f %f\n", 0.0, 0.0);
+    ufr_close(cmdvel);
     return 0;
 }

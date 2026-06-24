@@ -35,10 +35,10 @@ int main() {
     Camera* camera = camera_new(g_time_step);
 
 
-    link_t lnk_cmdvel = ufr_subscriber("@new mqtt @coder msgpack @host vriufpr.ddns.net @topic /pioneer/cmd_vel");
-    link_t lnk_odom   = ufr_publisher("@new mqtt @coder msgpack @host vriufpr.ddns.net @topic /pioneer/odom");
-    link_t lnk_lidar  = ufr_publisher("@new mqtt @coder msgpack @host vriufpr.ddns.net @topic /pioneer/scan");
-    link_t lnk_camera = ufr_publisher("@new mqtt @coder msgpack @host vriufpr.ddns.net @topic /pioneer/camera");
+    link_t* lnk_cmdvel = ufr_subscriber_env("UFR_CMDVEL");
+    link_t* lnk_odom   = ufr_publisher_env("UFR_ODOM");
+    // link_t lnk_lidar  = ufr_publisher("@new mqtt @coder msgpack @host vriufpr.ddns.net @topic /pioneer/scan");
+    // link_t lnk_camera = ufr_publisher("@new mqtt @coder msgpack @host vriufpr.ddns.net @topic /pioneer/camera");
 
 
     // Loop principal
@@ -46,17 +46,17 @@ int main() {
         wb_robot_step(g_time_step);
 
         // Verifica se recebeu mensagem no cmd_vel
-        if ( ufr_recv_async(&lnk_cmdvel) ) {
+        if ( ufr_recv_async(lnk_cmdvel) ) {
             float vel, rotvel;
-            ufr_get(&lnk_cmdvel, "%f %f", &vel, &rotvel);
+            ufr_get(lnk_cmdvel, "%f %f", &vel, &rotvel);
             printf("motor %f %f\n", vel, rotvel);
             motor_set_speed(motor, vel, rotvel);
         }
 
         // Odometria
-        odom_step_and_publish(odom, &lnk_odom);
-        lidar_step_and_publish(lidar, &lnk_lidar);
-        camera_step_and_publish(camera, &lnk_lidar);
+        odom_step_and_publish(odom, lnk_odom);
+        // lidar_step_and_publish(lidar, lnk_lidar);
+        // camera_step_and_publish(camera, lnk_lidar);
     }
 
     // Fim
