@@ -3,4 +3,4 @@ project(cpu1_notebook)
 
 
 add_subdirectory(app_teleop)
-
+add_subdirectory(app_view_lidar)

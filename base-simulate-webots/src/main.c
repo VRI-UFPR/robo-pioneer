@@ -37,7 +37,7 @@ int main() {
 
     link_t* lnk_cmdvel = ufr_subscriber_env("UFR_CMDVEL");
     link_t* lnk_odom   = ufr_publisher_env("UFR_ODOM");
-    // link_t lnk_lidar  = ufr_publisher("@new mqtt @coder msgpack @host vriufpr.ddns.net @topic /pioneer/scan");
+    link_t* lnk_lidar  = ufr_publisher_env("UFR_SCAN");
     // link_t lnk_camera = ufr_publisher("@new mqtt @coder msgpack @host vriufpr.ddns.net @topic /pioneer/camera");
 
 
@@ -55,7 +55,7 @@ int main() {
 
         // Odometria
         odom_step_and_publish(odom, lnk_odom);
-        // lidar_step_and_publish(lidar, lnk_lidar);
+        lidar_step_and_publish(lidar, lnk_lidar);
         // camera_step_and_publish(camera, lnk_lidar);
     }
 

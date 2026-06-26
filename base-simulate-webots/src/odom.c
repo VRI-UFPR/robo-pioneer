@@ -58,7 +58,7 @@ void odom_step_and_publish(Odom* odom, link_t* link) {
     }
 
     odom_step(odom);
-    // printf("%f %f %f\n", odom->x, odom->y, odom->th);
+    printf("%f %f %f\n", odom->x, odom->y, odom->th*180.0/3.141592);
     ufr_put(link, "%f %f %f\n", odom->x, odom->y, odom->th);
 }
 
