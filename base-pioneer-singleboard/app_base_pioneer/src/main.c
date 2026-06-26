@@ -40,7 +40,7 @@
 int main(int argc, char *argv[]) {
     link_t* timer = ufr_subscriber("@new timer @time 200ms");
     link_t* vel_cmd = ufr_subscriber_env("UFR_CMDVEL");
-    link_t* odom = ufr_publisher("UFR_ODOM");
+    link_t* odom = ufr_publisher_env("UFR_ODOM");
 
     const char* serial_port = (argc >= 2) ? argv[1] : "/dev/ttyUSB0";
     pioneer_connect(serial_port, 0);

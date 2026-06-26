@@ -51,20 +51,28 @@ int main() {
     const int32_t cx = COLS / 2;
     Mat image(480, 640, CV_8UC1);
     link_t* scan = ufr_subscriber_env("UFR_SCAN");
+    link_t* odom = ufr_subscriber_env("UFR_ODOM");
 
     // loop principal
     float angle_min, angle_max, angle_increment;
     while( ufr_loop() ) {
+        if ( ufr_recv_async(odom) ) {
+            float x,y,th;
+            ufr_get(odom, "%f %f %f", &x, &y, &th);
+            printf("pos %f %f %f\n", x,y,th);
+        }
+
+
         if ( ufr_recv(scan) == false ) {
             break;
         }
 
         // Faz a leitura das distancias
-        float valors[1024];
+        static float valors[2048];
         ufr_get(scan, "%f %f %f %- %- %- %-", &angle_min, &angle_max, &angle_increment);
-        const int nitems = ufr_get_af32(scan, valors, 1024);
+        const int nitems = ufr_get_af32(scan, valors, 2048);
 
-        printf("%d %f %f %f\n", nitems, angle_min, angle_max, angle_increment);
+        // printf("%d %f %f %f\n", nitems, angle_min, angle_max, angle_increment);
 
         // 
         image.setTo(Scalar(0));
@@ -78,8 +86,9 @@ int main() {
 
             // Calcula a posição do pixel
             // printf("%f\n", distance);
-            const int32_t dx = round(5.0 * distance * cos(angle));
-            const int32_t dy = round(5.0 * distance * -sin(angle));
+            const float fator = 5.0;
+            const int32_t dx = round(fator * distance * cos(angle));
+            const int32_t dy = round(fator * distance * -sin(angle));
             const uint32_t py = cy + dy;
             const uint32_t px = cy + dy;
 

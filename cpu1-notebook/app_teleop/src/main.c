@@ -81,16 +81,16 @@ int main() {
 
                 // Caso apertado w, s, a, d, altera a velocidade do roomba 
                 if ( c == 'w' ) {
-                    ufr_put(cmdvel, "%f %f\n", 1.0, 0.0);
+                    ufr_put(cmdvel, "%f %f\n", 5.0, 0.0);
 
                 } else if ( c == 's' ) {
-                    ufr_put(cmdvel, "%f %f\n", -1.0, 0.0);
+                    ufr_put(cmdvel, "%f %f\n", -5.0, 0.0);
 
                 } else if ( c == 'a' ) {
-                    ufr_put(cmdvel, "%f %f\n", 0.0, 10.0);
+                    ufr_put(cmdvel, "%f %f\n", 0.0, 20.0);
 
                 } else if ( c == 'd' ) {
-                    ufr_put(cmdvel, "%f %f\n", 0.0, -10.0);
+                    ufr_put(cmdvel, "%f %f\n", 0.0, -20.0);
 
                 // Caso apertado espaço, pára o roomba
                 } else if ( c == ' ' ) {
