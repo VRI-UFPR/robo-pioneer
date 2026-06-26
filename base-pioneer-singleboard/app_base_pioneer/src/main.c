@@ -54,8 +54,8 @@ int main(int argc, char *argv[]) {
     float vel=0, rotvel=0;
     while( ufr_loop_ok() ) {
 
-        if ( ufr_recv_async(&vel_cmd) ) {
-            ufr_get(&vel_cmd, "%f %f", &vel, &rotvel);
+        if ( ufr_recv_async(vel_cmd) ) {
+            ufr_get(vel_cmd, "%f %f", &vel, &rotvel);
             i16_vel = (int16_t) (vel * 100.0);
             i16_rotvel = (int16_t) rotvel;
             printf("%f %f\n", vel, rotvel);
@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
             count = 0;
         }
 
-        if ( ufr_recv_async(&timer) == UFR_OK ) {
+        if ( ufr_recv_async(timer) == UFR_OK ) {
             if ( count >= 3 ) {
                 pioneer_vel(i16_vel);
                 pioneer_rotvel(i16_rotvel);
@@ -93,7 +93,7 @@ int main(int argc, char *argv[]) {
         int pos_x, pos_y;
         float pos_th;
         pioneer_read(&pos_x, &pos_y, &pos_th);
-        ufr_put(&odom, "%d %d %f %f %f\n", pos_x, pos_y, pos_th*M_PI/180.0, vel, rotvel);
+        ufr_put(odom, "%d %d %f %f %f\n", pos_x, pos_y, pos_th*M_PI/180.0, vel, rotvel);
 
         // wait 50ms
         usleep(50000);
