@@ -52,7 +52,7 @@ double angle_min;
 double angle_max;
 double max_distance = 8.0f;
 
-link_t g_pub;
+link_t* g_pub = NULL;
 
 #ifndef ROBOT_TOPIC_SCAN
 // #define ROBOT_TOPIC_SCAN "@new ros_humble @coder ros_humble:laser_scan @topic scan @frame_id laser_frame"
@@ -224,10 +224,10 @@ void publish_scan(const double scan_time, ResponseNodeArray nodes, size_t node_c
 
     // printf("%d %f %f %f\n", scan_count, scan_time, range_min, range_max);
     // m_publisher->publish(scan_msg);
-    ufr_put(&g_pub, "%f %f %f %f %f %f %f", msg_angle_min, msg_angle_max, angle_increment, time_increment, scan_time, range_min, range_max);
-    ufr_put_af32(&g_pub, ranges, node_count);
-    ufr_put_af32(&g_pub, intensities, node_count);
-    ufr_send(&g_pub);
+    ufr_put(g_pub, "%f %f %f %f %f %f %f", msg_angle_min, msg_angle_max, angle_increment, time_increment, scan_time, range_min, range_max);
+    ufr_put_af32(g_pub, ranges, node_count);
+    ufr_put_af32(g_pub, intensities, node_count);
+    ufr_send(g_pub);
 }
 
 int publish_loop() {
@@ -314,8 +314,8 @@ int main(int argc, char** argv) {
     const char* serial_port = (argc >= 2) ? argv[1] : "/dev/ttyUSB0";
     printf("Iniciando Rplidar on %s with baudrate %d\n", serial_port, serial_baudrate);
 
-    g_pub = ufr_publisher(ROBOT_TOPIC_SCAN);
-    ufr_exit_if_error(&g_pub);
+    g_pub = ufr_publisher_env("UFR_SCAN");
+    ufr_exit_if_error(g_pub);
 
     /* initialize SDK */
     m_drv = RPlidarDriver::CreateDriver(rp::standalone::rplidar::DRIVER_TYPE_SERIALPORT);
@@ -363,6 +363,6 @@ int main(int argc, char** argv) {
     printf("Desligando\n");
     stop_motor();
     rplidar_free();
-    ufr_close(&g_pub);
+    ufr_close(g_pub);
     return 0;
 }
