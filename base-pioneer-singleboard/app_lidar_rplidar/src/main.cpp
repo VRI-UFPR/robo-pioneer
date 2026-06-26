@@ -54,10 +54,6 @@ double max_distance = 8.0f;
 
 link_t* g_pub = NULL;
 
-#ifndef ROBOT_TOPIC_SCAN
-// #define ROBOT_TOPIC_SCAN "@new ros_humble @coder ros_humble:laser_scan @topic scan @frame_id laser_frame"
-#define ROBOT_TOPIC_SCAN "@new mqtt @topic scan @host 177.153.62.174"
-#endif
 
 // ============================================================================
 //  Functions
@@ -334,12 +330,12 @@ int main(int argc, char** argv) {
     // get rplidar device info
     if (!getRPLIDARDeviceInfo()) {
         /* don't continue */
+        printf("Error, cannot get infor from lidar '%s'.\n", serial_port);
         rplidar_free();
         return -1;
     }
 
     // Start motor
-    printf("Loop principal\n");
     start_motor();
     if (!set_scan_mode()) {
         // error 
@@ -351,6 +347,7 @@ int main(int argc, char** argv) {
     }
 
     // Main loop
+    printf("Loop principal\n");
     while( ufr_loop_ok() ) {
         const int res = publish_loop();
         if ( res != 0 ) {

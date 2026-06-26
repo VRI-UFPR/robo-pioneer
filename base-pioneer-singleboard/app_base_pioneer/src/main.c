@@ -32,24 +32,18 @@
 
 #include "pioneer_p3dx.h"
 
-#ifndef ROBOT_TOPIC_CMD_VEL
-#define ROBOT_TOPIC_CMD_VEL "@new ros_humble:topic @coder ros_humble:twist @topic /cmd_vel @debug 0"
-#endif
-
-#ifndef ROBOT_TOPIC_ODOM
-#define ROBOT_TOPIC_ODOM "@new ros_humble @coder ros_humble:pose @debug 0 @topic /odom"
-#endif
 
 // ============================================================================
 //  Main Pioneer
 // ============================================================================
 
 int main(int argc, char *argv[]) {
-    link_t timer = ufr_subscriber("@new timer @time 200ms");
-    link_t vel_cmd = ufr_subscriber(ROBOT_TOPIC_CMD_VEL);
-    link_t odom = ufr_publisher(ROBOT_TOPIC_ODOM);
+    link_t* timer = ufr_subscriber("@new timer @time 200ms");
+    link_t* vel_cmd = ufr_subscriber_env("UFR_CMDVEL");
+    link_t* odom = ufr_publisher("UFR_ODOM");
 
-    pioneer_connect("/dev/ttyUSB0", 0);
+    const char* serial_port = (argc >= 2) ? argv[1] : "/dev/ttyUSB0";
+    pioneer_connect(serial_port, 0);
     pioneer_disable_sonars();
     // -- pioneer_enable_motors();
 
